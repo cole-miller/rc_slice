@@ -1,6 +1,7 @@
 //! This crate provides reference-counted slices that support easy subdivision.
 
 #![no_std]
+#![deny(unsafe_code)]
 
 extern crate alloc;
 
