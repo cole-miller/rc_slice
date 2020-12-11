@@ -79,6 +79,24 @@ impl<T> RcSlice<T> {
         }
     }
 
+    /// Decreases the ending index of `it` by `decr` places, and returns a reference to the
+    /// elements cut off by this operation.
+    ///
+    /// Returns `None` and leaves `it` unchanged if this operation would make the ending index less
+    /// than the starting index.
+    pub fn retract(it: &mut Self, decr: usize) -> Option<&[T]> {
+        let cut = it.end.checked_sub(decr)?;
+
+        if cut >= it.start {
+            let shed = &it.underlying[cut..it.end];
+            it.end = cut;
+
+            Some(shed)
+        } else {
+            None
+        }
+    }
+
     /// Mutates the view `it` to point to only the first `index` elements of the underlying slice,
     /// and returns a new view of the remaining elements.
     ///
@@ -93,6 +111,25 @@ impl<T> RcSlice<T> {
             it.start = cut;
 
             Some(front)
+        } else {
+            None
+        }
+    }
+
+    /// Returns a new view of the first `index` elements of the underlying slice, and mutates `it`
+    /// to point to only the remaining elements.
+    ///
+    /// Returns `None` and leaves `it` unchanged if the underlying slice has fewer than `index`
+    /// elements.
+    pub fn split_off_after(it: &mut Self, index: usize) -> Option<Self> {
+        let cut = it.start.checked_add(index)?;
+
+        if cut <= it.end {
+            let mut back = it.clone();
+            back.start = cut;
+            it.end = cut;
+
+            Some(back)
         } else {
             None
         }
@@ -169,6 +206,24 @@ impl<T> ArcSlice<T> {
         }
     }
 
+    /// Decreases the ending index of `it` by `decr` places, and returns a reference to the
+    /// elements cut off by this operation.
+    ///
+    /// Returns `None` and leaves `it` unchanged if this operation would make the ending index less
+    /// than the starting index.
+    pub fn retract(it: &mut Self, decr: usize) -> Option<&[T]> {
+        let cut = it.end.checked_sub(decr)?;
+
+        if cut >= it.start {
+            let shed = &it.underlying[cut..it.end];
+            it.end = cut;
+
+            Some(shed)
+        } else {
+            None
+        }
+    }
+
     /// Mutates the view `it` to point to only the first `index` elements of the underlying slice,
     /// and returns a new view of the remaining elements.
     ///
@@ -183,6 +238,25 @@ impl<T> ArcSlice<T> {
             it.start = cut;
 
             Some(front)
+        } else {
+            None
+        }
+    }
+
+    /// Returns a new view of the first `index` elements of the underlying slice, and mutates `it`
+    /// to point to only the remaining elements.
+    ///
+    /// Returns `None` and leaves `it` unchanged if the underlying slice has fewer than `index`
+    /// elements.
+    pub fn split_off_after(it: &mut Self, index: usize) -> Option<Self> {
+        let cut = it.start.checked_add(index)?;
+
+        if cut <= it.end {
+            let mut back = it.clone();
+            back.start = cut;
+            it.end = cut;
+
+            Some(back)
         } else {
             None
         }
