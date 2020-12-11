@@ -5,7 +5,7 @@ sources:
   - https://github.com/cole-miller/rc_slice
 tasks:
   - setup: |
-      rustup -q toolchain install stable beta
+      rustup -q toolchain install stable beta --profile=minimal
   - stable: |
       rustup -q default stable
       cd rc_slice
