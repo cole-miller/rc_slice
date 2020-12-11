@@ -67,7 +67,7 @@ impl<T> RcSlice<T> {
     /// Returns `None` and leaves `it` unchanged if this operation would make the starting index
     /// greater than the ending index.
     pub fn advance(it: &mut Self, incr: usize) -> Option<&[T]> {
-        let cut = it.start + incr;
+        let cut = it.start.checked_add(incr)?;
 
         if cut <= it.end {
             let shed = &it.underlying[it.start..cut];
@@ -85,7 +85,7 @@ impl<T> RcSlice<T> {
     /// Returns `None` and leaves `it` unchanged if this operation would make the starting index
     /// greater than the ending index.
     pub fn split_off_before(it: &mut Self, index: usize) -> Option<Self> {
-        let cut = it.start + index;
+        let cut = it.start.checked_add(index)?;
 
         if cut <= it.end {
             let mut front = it.clone();
@@ -156,8 +156,8 @@ impl<T> ArcSlice<T> {
     ///
     /// Returns `None` and leaves `it` unchanged if this operation would make the starting index
     /// greater than the ending index.
-    pub fn advance(it: &mut Self, by: usize) -> Option<&[T]> {
-        let cut = it.start + by;
+    pub fn advance(it: &mut Self, incr: usize) -> Option<&[T]> {
+        let cut = it.start.checked_add(incr)?;
 
         if cut <= it.end {
             let shed = &it.underlying[it.start..cut];
@@ -175,7 +175,7 @@ impl<T> ArcSlice<T> {
     /// Returns `None` and leaves `it` unchanged if this operation would make the starting index
     /// greater than the ending index.
     pub fn split_off_before(it: &mut Self, index: usize) -> Option<Self> {
-        let cut = it.start + index;
+        let cut = it.start.checked_add(index)?;
 
         if cut <= it.end {
             let mut front = it.clone();
