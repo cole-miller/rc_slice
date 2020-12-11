@@ -5,15 +5,15 @@ sources:
   - https://github.com/cole-miller/rc_slice
 tasks:
   - setup: |
-      rustup toolchain install stable beta
+      rustup -q toolchain install stable beta
   - stable: |
-      rustup default stable
+      rustup -q default stable
       cd rc_slice
       cargo build --verbose
       cargo test --verbose
       cargo doc --verbose --no-deps
   - beta: |
-      rustup default beta
+      rustup -q default beta
       cd rc_slice
       cargo build --verbose ||:
       cargo test --verbose ||:
