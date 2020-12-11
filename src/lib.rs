@@ -9,7 +9,7 @@ use alloc::rc::Rc;
 use alloc::sync::Arc;
 use core::ops::Deref;
 
-/// A view into an underlying reference-counted slice.
+/// A read-only view into an underlying reference-counted slice.
 ///
 /// The associated functions provided for this type do not take a receiver to avoid conflicting
 /// with (present or future) methods on `[T]`, since `RcSlice<T>: Deref<Target = [T]>`.
@@ -56,7 +56,7 @@ impl<T> From<Rc<[T]>> for RcSlice<T> {
 }
 
 impl<T> RcSlice<T> {
-    /// Returns the starting and ending indices of this view within the underlying slice.
+    /// Returns the starting and ending indices of the view `it` within the underlying slice.
     pub fn bounds(it: &Self) -> (usize, usize) {
         (it.start, it.end)
     }
@@ -79,11 +79,11 @@ impl<T> RcSlice<T> {
         }
     }
 
-    /// Sets the starting index of `it` to its previous value plus `index`, and returns a new view
-    /// of the cut-off portion of the underlying slice.
+    /// Mutates the view `it` to point to only the first `index` elements of the underlying slice,
+    /// and returns a new view of the remaining elements.
     ///
-    /// Returns `None` and leaves `it` unchanged if this operation would make the starting index
-    /// greater than the ending index.
+    /// Returns `None` and leaves `it` unchanged if the underlying slice has fewer than `index`
+    /// elements.
     pub fn split_off_before(it: &mut Self, index: usize) -> Option<Self> {
         let cut = it.start.checked_add(index)?;
 
@@ -99,7 +99,7 @@ impl<T> RcSlice<T> {
     }
 }
 
-/// A view into an underlying atomically reference-counted slice.
+/// A read-only view into an underlying atomically reference-counted slice.
 ///
 /// The associated functions provided for this type do not take a receiver to avoid conflicting
 /// with (present or future) methods on `[T]`, since `ArcSlice<T>: Deref<Target = [T]>`.
@@ -146,7 +146,7 @@ impl<T> From<Arc<[T]>> for ArcSlice<T> {
 }
 
 impl<T> ArcSlice<T> {
-    /// Returns the starting and ending indices of this view within the underlying slice.
+    /// Returns the starting and ending indices of the view `it` within the underlying slice.
     pub fn bounds(it: &Self) -> (usize, usize) {
         (it.start, it.end)
     }
@@ -169,11 +169,11 @@ impl<T> ArcSlice<T> {
         }
     }
 
-    /// Sets the starting index of `it` to its previous value plus `index`, and returns a new view
-    /// of the cut-off portion of the underlying slice.
+    /// Mutates the view `it` to point to only the first `index` elements of the underlying slice,
+    /// and returns a new view of the remaining elements.
     ///
-    /// Returns `None` and leaves `it` unchanged if this operation would make the starting index
-    /// greater than the ending index.
+    /// Returns `None` and leaves `it` unchanged if the underlying slice has fewer than `index`
+    /// elements.
     pub fn split_off_before(it: &mut Self, index: usize) -> Option<Self> {
         let cut = it.start.checked_add(index)?;
 
