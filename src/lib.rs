@@ -13,7 +13,7 @@ use core::fmt;
 use core::hash::{Hash, Hasher};
 use core::ops::Deref;
 
-/// A read-only view into an underlying reference-counted slice.
+/// A read-only view into part of an underlying reference-counted slice.
 ///
 /// The associated functions provided for this type do not take a receiver to avoid conflicting
 /// with (present or future) methods on `[T]`, since `RcSlice<T>: Deref<Target = [T]>`.
@@ -139,10 +139,10 @@ impl<T> RcSlice<T> {
         }
     }
 
-    /// Mutates the view `it` to point to only the first `index` elements of the underlying slice,
+    /// Mutates the view `it` to point to only the first `index` elements of the previous window,
     /// and returns a new view of the remaining elements.
     ///
-    /// Returns `None` and leaves `it` unchanged if the underlying slice has fewer than `index`
+    /// Returns `None` and leaves `it` unchanged if the previous window has fewer than `index`
     /// elements.
     pub fn split_off_before(it: &mut Self, index: usize) -> Option<Self> {
         let cut = it.start.checked_add(index)?;
@@ -158,10 +158,10 @@ impl<T> RcSlice<T> {
         }
     }
 
-    /// Returns a new view of the first `index` elements of the underlying slice, and mutates `it`
+    /// Returns a new view of the first `index` elements of the previous window, and mutates `it`
     /// to point to only the remaining elements.
     ///
-    /// Returns `None` and leaves `it` unchanged if the underlying slice has fewer than `index`
+    /// Returns `None` and leaves `it` unchanged if the previous window has fewer than `index`
     /// elements.
     pub fn split_off_after(it: &mut Self, index: usize) -> Option<Self> {
         let cut = it.start.checked_add(index)?;
@@ -178,7 +178,7 @@ impl<T> RcSlice<T> {
     }
 }
 
-/// A read-only view into an underlying atomically reference-counted slice.
+/// A read-only view into part of an underlying atomically reference-counted slice.
 ///
 /// The associated functions provided for this type do not take a receiver to avoid conflicting
 /// with (present or future) methods on `[T]`, since `ArcSlice<T>: Deref<Target = [T]>`.
@@ -304,10 +304,10 @@ impl<T> ArcSlice<T> {
         }
     }
 
-    /// Mutates the view `it` to point to only the first `index` elements of the underlying slice,
+    /// Mutates the view `it` to point to only the first `index` elements of the previous window,
     /// and returns a new view of the remaining elements.
     ///
-    /// Returns `None` and leaves `it` unchanged if the underlying slice has fewer than `index`
+    /// Returns `None` and leaves `it` unchanged if the previous window has fewer than `index`
     /// elements.
     pub fn split_off_before(it: &mut Self, index: usize) -> Option<Self> {
         let cut = it.start.checked_add(index)?;
@@ -323,10 +323,10 @@ impl<T> ArcSlice<T> {
         }
     }
 
-    /// Returns a new view of the first `index` elements of the underlying slice, and mutates `it`
+    /// Returns a new view of the first `index` elements of the previous window, and mutates `it`
     /// to point to only the remaining elements.
     ///
-    /// Returns `None` and leaves `it` unchanged if the underlying slice has fewer than `index`
+    /// Returns `None` and leaves `it` unchanged if the previous window has fewer than `index`
     /// elements.
     pub fn split_off_after(it: &mut Self, index: usize) -> Option<Self> {
         let cut = it.start.checked_add(index)?;
