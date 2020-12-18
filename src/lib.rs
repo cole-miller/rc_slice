@@ -7,6 +7,10 @@ extern crate alloc;
 
 use alloc::rc::Rc;
 use alloc::sync::Arc;
+use core::borrow::Borrow;
+use core::cmp::Ordering;
+use core::fmt;
+use core::hash::{Hash, Hasher};
 use core::ops::Deref;
 
 /// A read-only view into an underlying reference-counted slice.
@@ -52,6 +56,44 @@ impl<T> From<Rc<[T]>> for RcSlice<T> {
             start: 0,
             end,
         }
+    }
+}
+
+impl<T: fmt::Debug> fmt::Debug for RcSlice<T> {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        self.deref().fmt(f)
+    }
+}
+
+impl<T: PartialEq> PartialEq for RcSlice<T> {
+    fn eq(&self, other: &Self) -> bool {
+        self.deref() == other.deref()
+    }
+}
+
+impl<T: Eq> Eq for RcSlice<T> {}
+
+impl<T: PartialOrd> PartialOrd for RcSlice<T> {
+    fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
+        self.deref().partial_cmp(other.deref())
+    }
+}
+
+impl<T: Ord> Ord for RcSlice<T> {
+    fn cmp(&self, other: &Self) -> Ordering {
+        self.deref().cmp(other.deref())
+    }
+}
+
+impl<T> Borrow<[T]> for RcSlice<T> {
+    fn borrow(&self) -> &[T] {
+        self.as_ref()
+    }
+}
+
+impl<T: Hash> Hash for RcSlice<T> {
+    fn hash<H: Hasher>(&self, state: &mut H) {
+        Hash::hash_slice(self.deref(), state)
     }
 }
 
@@ -179,6 +221,44 @@ impl<T> From<Arc<[T]>> for ArcSlice<T> {
             start: 0,
             end,
         }
+    }
+}
+
+impl<T: fmt::Debug> fmt::Debug for ArcSlice<T> {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        self.deref().fmt(f)
+    }
+}
+
+impl<T: PartialEq> PartialEq for ArcSlice<T> {
+    fn eq(&self, other: &Self) -> bool {
+        self.deref() == other.deref()
+    }
+}
+
+impl<T: Eq> Eq for ArcSlice<T> {}
+
+impl<T: PartialOrd> PartialOrd for ArcSlice<T> {
+    fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
+        self.deref().partial_cmp(other.deref())
+    }
+}
+
+impl<T: Ord> Ord for ArcSlice<T> {
+    fn cmp(&self, other: &Self) -> Ordering {
+        self.deref().cmp(other.deref())
+    }
+}
+
+impl<T> Borrow<[T]> for ArcSlice<T> {
+    fn borrow(&self) -> &[T] {
+        self.as_ref()
+    }
+}
+
+impl<T: Hash> Hash for ArcSlice<T> {
+    fn hash<H: Hasher>(&self, state: &mut H) {
+        Hash::hash_slice(self.deref(), state)
     }
 }
 
