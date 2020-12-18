@@ -1,6 +1,6 @@
 [package]
 name = "rc_slice"
-version = "0.2.0"
+version = "0.3.0"
 
 authors = ["Cole Miller <m@cole-miller.net>"]
 categories = ["data-structures", "memory-management", "no-std"]
