@@ -1,7 +1,8 @@
-[![builds.sr.ht status](https://builds.sr.ht/~cole-miller/rc_slice/commits.svg)](https://builds.sr.ht/~cole-miller/rc_slice/commits?)
+This is a deprecated, unmaintained Rust library providing reference-counted
+slice types.
 
-The rc_slice library provides Rust types representing read-only views into
-underlying reference-counted slices.
-
-rc_slice is released under the terms of the Apache License, version 2.0 (see
-LICENSE-APACHE) or the MIT license (see LICENSE-MIT), at your option.
+If you're looking for a maintained library with similar functionality, you
+could try [rc-slice2](https://crates.io/crates/rc-slice2), which is a fork of
+this codebase with a new maintainer. I have not reviewed the fork and cannot
+vouch for it personally, so you should evaluate it like you would any new
+dependency.
